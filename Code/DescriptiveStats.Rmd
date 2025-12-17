@@ -1,0 +1,136 @@
+---
+title: "Descriptive Stats"
+author: "Edward Bosko"
+date: '`r Sys.Date()`'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries
+
+```{r}
+library(readxl)
+library(tidyverse)
+```
+
+## Read in data
+
+```{r}
+#directory of file
+wd <- "C:/Users/Eddie/OneDrive/Desktop/BIOSTAT/Thesis/Journal/DataProcessed/ModelingData.xlsx"
+
+#load in individual sheets
+tib <- read_excel(wd, sheet = "tib.long")
+ln <- read_excel(wd, sheet = "ln.long")
+ggo <- read_excel(wd, sheet = "ggo.long")
+cons <- read_excel(wd, sheet = "cons.long")
+bronch <- read_excel(wd, sheet = "bronch.long")
+atel <- read_excel(wd, sheet = "atel.long")
+thin <- read_excel(wd, sheet = "thin.long")
+thick <- read_excel(wd, sheet = "thick.long")
+```
+
+## Descriptive Stats for Manuscript
+
+### Bronchiectasis
+
+```{r}
+# lobes with bronchiectasis present (i.e. score != 0)
+bronch_present <- bronch %>% filter(score != 0)
+cat("Number of lobes with bronchiectasis present:",nrow(bronch_present),"\n")
+
+# lobes with moderate-to-high-degree bronchiectasis present (i.e. score = 2 or 3)
+bronch_high <- bronch %>% filter(score == 2 | score == 3)
+
+# print percent moderate-to-high-degree for RML, LLS, RUL
+pct_high_bronch <- function(lobe_code){
+  denom <- bronch %>% filter(lobe == lobe_code) %>% nrow()
+  numer <- bronch_high %>% filter(lobe == lobe_code) %>% nrow()
+  round(100 * numer / denom,1)
+}
+
+cat("Percent of RML with moderate-to-high-degree bronchiectasis present:",pct_high_bronch("RML"),"\n")
+cat("Percent of LLS with moderate-to-high-degree bronchiectasis present:",pct_high_bronch("LLS"),"\n")
+cat("Percent of RUL with moderate-to-high-degree bronchiectasis present:",pct_high_bronch("RUL"),"\n")
+
+```
+
+### Atelectasis
+
+```{r}
+# lobes with atelectasis present (i.e. score != 0)
+atel_present <- atel %>% filter(score != 0)
+cat("Number of lobes with atelectasis present:",nrow(atel_present),"\n")
+
+# lobes with moderate-to-high-degree atelectasis present (i.e. score = 2 or 3)
+atel_high <- atel %>% filter(score == 2 | score == 3)
+
+# print percent moderate-to-high-degree for RML, LLS
+pct_high_atel <- function(lobe_code){
+  denom <- atel %>% filter(lobe == lobe_code) %>% nrow()
+  numer <- atel_high %>% filter(lobe == lobe_code) %>% nrow()
+  round(100 * numer / denom,1)
+}
+
+cat("Percent of RML with moderate-to-high-degree atelectasis present:",pct_high_atel("RML"),"\n")
+cat("Percent of LLS with moderate-to-high-degree atelectasis present:",pct_high_atel("LLS"),"\n")
+
+```
+
+### Consolidation
+
+```{r}
+# lobes with consolidation present (i.e. score != 0)
+cons_present <- cons %>% filter(score != 0)
+cat("Number of lobes with consolidation present:",nrow(cons_present),"\n")
+
+```
+
+### Ground-glass opacities
+
+```{r}
+# lobes with ggo present (i.e. score != 0)
+ggo_present <- ggo %>% filter(score != 0)
+cat("Number of lobes with ground-glass opacities present:",nrow(ggo_present),"\n")
+
+```
+
+### Tree-in-bud
+
+```{r}
+# lobes with tib present (i.e. score != 0)
+tib_present <- tib %>% filter(score != 0)
+cat("Number of lobes with ground-glass opacities present:",nrow(tib_present),"\n")
+
+```
+
+### Large nodules
+
+```{r}
+# lobes with ln present (i.e. score != 0)
+ln_present <- ln %>% filter(score != 0)
+cat("Number of lobes with ground-glass opacities present:",nrow(ln_present),"\n")
+
+```
+
+### Thin wall cavities
+
+```{r}
+# lobes with ln present (i.e. score != 0)
+thin_present <- thin %>% filter(score != 0)
+cat("Number of lobes with ground-glass opacities present:",nrow(thin_present),"\n")
+
+```
+
+### Thick wall cavities
+
+```{r}
+# lobes with ln present (i.e. score != 0)
+thick_present <- thick %>% filter(score != 0)
+cat("Number of lobes with ground-glass opacities present:",nrow(thick_present),"\n")
+
+```
+
