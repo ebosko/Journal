@@ -21,6 +21,7 @@ library(tidyverse)
 ```{r}
 #directory of file
 wd <- "C:/Users/Eddie/OneDrive/Desktop/BIOSTAT/Thesis/Journal/DataProcessed/ModelingData.xlsx"
+wd2 <- "C:/Users/Eddie/OneDrive/Desktop/BIOSTAT/Thesis/Journal/DataProcessed/DataCountsMeasurements.xlsx"
 
 #load in individual sheets
 tib <- read_excel(wd, sheet = "tib.long")
@@ -29,8 +30,10 @@ ggo <- read_excel(wd, sheet = "ggo.long")
 cons <- read_excel(wd, sheet = "cons.long")
 bronch <- read_excel(wd, sheet = "bronch.long")
 atel <- read_excel(wd, sheet = "atel.long")
-thin <- read_excel(wd, sheet = "thin.long")
-thick <- read_excel(wd, sheet = "thick.long")
+thin_bin <- read_excel(wd, sheet = "thin.long")
+thick_bin <- read_excel(wd, sheet = "thick.long")
+thin <- read_excel(wd2, sheet = "thin.count.long")
+thick <- read_excel(wd2, sheet = "thick.count.long")
 ```
 
 ## Descriptive Stats for Manuscript
@@ -119,18 +122,63 @@ cat("Number of lobes with ground-glass opacities present:",nrow(ln_present),"\n"
 ### Thin wall cavities
 
 ```{r}
-# lobes with ln present (i.e. score != 0)
-thin_present <- thin %>% filter(score != 0)
-cat("Number of lobes with ground-glass opacities present:",nrow(thin_present),"\n")
+# find each raters' count for thin wall cavities, broken up by desired phenotype
+thin_NBc_count_VH <- thin %>% filter(overall == 1, rater == 'VH') %>% summarize(sum(score)) %>% pull()
+thin_NBc_count_JW <- thin %>% filter(overall == 1, rater == 'JW') %>% summarize(sum(score)) %>% pull()
+thin_fib_count_VH <- thin %>% filter(overall == 3, rater == 'VH') %>% summarize(sum(score)) %>% pull()
+thin_fib_count_JW <- thin %>% filter(overall == 3, rater == 'JW') %>% summarize(sum(score)) %>% pull()
+
+cat("Number of thin wall cavities for NBc by VH:",thin_NBc_count_VH,"\n")
+cat("Number of thin wall cavities for NBc by JW:",thin_NBc_count_JW,"\n")
+cat("Number of thin wall cavities for fib by VH:",thin_fib_count_VH,"\n")
+cat("Number of thin wall cavities for fib by JW:",thin_fib_count_JW,"\n")
 
 ```
 
 ### Thick wall cavities
 
 ```{r}
-# lobes with ln present (i.e. score != 0)
-thick_present <- thick %>% filter(score != 0)
-cat("Number of lobes with ground-glass opacities present:",nrow(thick_present),"\n")
+# find each raters' count for thin wall cavities, broken up by desired phenotype
+thick_NBc_count_VH <- thick %>% filter(overall == 1, rater == 'VH') %>% summarize(sum(score)) %>% pull()
+thick_NBc_count_JW <- thick %>% filter(overall == 1, rater == 'JW') %>% summarize(sum(score)) %>% pull()
+thick_fib_count_VH <- thick %>% filter(overall == 3, rater == 'VH') %>% summarize(sum(score)) %>% pull()
+thick_fib_count_JW <- thick %>% filter(overall == 3, rater == 'JW') %>% summarize(sum(score)) %>% pull()
+
+cat("Number of thick wall cavities for NBc by VH:",thick_NBc_count_VH,"\n")
+cat("Number of thick wall cavities for NBc by JW:",thick_NBc_count_JW,"\n")
+cat("Number of thick wall cavities for fib by VH:",thick_fib_count_VH,"\n")
+cat("Number of thick wall cavities for fib by JW:",thick_fib_count_JW,"\n")
 
 ```
 
+### Thin wall cavities - binary
+
+```{r}
+# find each raters' count for thin wall cavities, broken up by desired phenotype
+thin_NBc_count_VH_bin <- thin_bin %>% filter(overall == 1, rater == 'VH') %>% summarize(sum(score)) %>% pull()
+thin_NBc_count_JW_bin <- thin_bin %>% filter(overall == 1, rater == 'JW') %>% summarize(sum(score)) %>% pull()
+thin_fib_count_VH_bin <- thin_bin %>% filter(overall == 3, rater == 'VH') %>% summarize(sum(score)) %>% pull()
+thin_fib_count_JW_bin <- thin_bin %>% filter(overall == 3, rater == 'JW') %>% summarize(sum(score)) %>% pull()
+
+cat("Number of thin wall cavities for NBc by VH:",thin_NBc_count_VH_bin,"\n")
+cat("Number of thin wall cavities for NBc by JW:",thin_NBc_count_JW_bin,"\n")
+cat("Number of thin wall cavities for fib by VH:",thin_fib_count_VH_bin,"\n")
+cat("Number of thin wall cavities for fib by JW:",thin_fib_count_JW_bin,"\n")
+
+```
+
+### Thick wall cavities - binary
+
+```{r}
+# find each raters' count for thin wall cavities, broken up by desired phenotype
+thick_NBc_count_VH_bin <- thick_bin %>% filter(overall == 1, rater == 'VH') %>% summarize(sum(score)) %>% pull()
+thick_NBc_count_JW_bin <- thick_bin %>% filter(overall == 1, rater == 'JW') %>% summarize(sum(score)) %>% pull()
+thick_fib_count_VH_bin <- thick_bin %>% filter(overall == 3, rater == 'VH') %>% summarize(sum(score)) %>% pull()
+thick_fib_count_JW_bin <- thick_bin %>% filter(overall == 3, rater == 'JW') %>% summarize(sum(score)) %>% pull()
+
+cat("Number of thick wall cavities for NBc by VH:",thick_NBc_count_VH_bin,"\n")
+cat("Number of thick wall cavities for NBc by JW:",thick_NBc_count_JW_bin,"\n")
+cat("Number of thick wall cavities for fib by VH:",thick_fib_count_VH_bin,"\n")
+cat("Number of thick wall cavities for fib by JW:",thick_fib_count_JW_bin,"\n")
+
+```
