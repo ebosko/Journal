@@ -1,0 +1,246 @@
+---
+title: "Vis"
+author: "Edward Bosko"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+```
+
+## Read in data
+
+```{r}
+#directory of file
+wd <- "C:/Users/Eddie/OneDrive/Desktop/BIOSTAT/Thesis/Journal/DataProcessed/ModelingData.xlsx"
+
+#load in individual sheets
+tib <- read_excel(wd, sheet = "tib.long")
+ln <- read_excel(wd, sheet = "ln.long")
+ggo <- read_excel(wd, sheet = "ggo.long")
+cons <- read_excel(wd, sheet = "cons.long")
+bronch <- read_excel(wd, sheet = "bronch.long")
+atel <- read_excel(wd, sheet = "atel.long")
+thin_bin <- read_excel(wd, sheet = "thin.long")
+thick_bin <- read_excel(wd, sheet = "thick.long")
+thin <- read_excel(wd, sheet = "thin.long")
+thick <- read_excel(wd, sheet = "thick.long")
+```
+
+## Visualize the Distribution of Scores
+
+### Tree-in-bud
+
+```{r}
+score_colors_new <- c(
+  "3" = "maroon4",  # maroon for Score 3
+  "2" = "deeppink",  # "strawberry for Score 2
+  "1" = "plum1",  # Light pink for Score 1
+  "0" = "white"   # white for Score 0
+)
+
+#by lobe
+tib %>%
+  group_by(lobe, score) %>%
+  summarize(n=n()) %>%
+  mutate(prop = n / sum(n))
+
+tib %>%
+  mutate(score = factor(score, levels = c(3,2,1,0)),
+         lobe = factor(lobe, levels = c('RUL','RML','RLL','LUS','LLS','LLL'))) %>%
+  ggplot(aes (x=lobe, fill = factor(score))) +
+  geom_bar(position = 'stack', color='black', linewidth=0.2) + 
+  scale_fill_manual(values = score_colors_new) +
+  labs(
+    title = 'Distribution of TIB Ratings by Lobe',
+    x='Lobe',
+    y='Count',
+    fill='Rating'
+  ) +
+  theme_minimal()
+
+```
+
+### Large Nodules
+
+```{r}
+#by lobe
+ln %>%
+  group_by(lobe, score) %>%
+  summarize(n=n()) %>%
+  mutate(prop = n / sum(n))
+
+ln %>%
+  mutate(score = factor(score, levels = c(3,2,1,0)),
+         lobe = factor(lobe, levels = c('RUL','RML','RLL','LUS','LLS','LLL'))) %>%
+  ggplot(aes (x=lobe, fill = factor(score))) +
+  geom_bar(position = 'stack', color='black', linewidth=0.2) + 
+  scale_fill_manual(values = score_colors_new) +
+  labs(
+    title = 'Distribution of LN Ratings by Lobe',
+    x='Lobe',
+    y='Count',
+    fill='Rating'
+  ) +
+  theme_minimal()
+
+```
+
+### Ground-glass Opacities
+
+```{r}
+#by lobe
+ggo %>%
+  group_by(lobe, score) %>%
+  summarize(n=n()) %>%
+  mutate(prop = n / sum(n))
+
+ggo %>%
+  mutate(score = factor(score, levels = c(3,2,1,0)),
+         lobe = factor(lobe, levels = c('RUL','RML','RLL','LUS','LLS','LLL'))) %>%
+  ggplot(aes (x=lobe, fill = factor(score))) +
+  geom_bar(position = 'stack', color='black', linewidth=0.2) + 
+  scale_fill_manual(values = score_colors_new) +
+  labs(
+    title = 'Distribution of GGO Ratings by Lobe',
+    x='Lobe',
+    y='Count',
+    fill='Rating'
+  ) +
+  theme_minimal()
+
+```
+
+### Consolidations
+
+```{r}
+#by lobe
+cons %>%
+  group_by(lobe, score) %>%
+  summarize(n=n()) %>%
+  mutate(prop = n / sum(n))
+
+cons %>%
+  mutate(score = factor(score, levels = c(3,2,1,0)),
+         lobe = factor(lobe, levels = c('RUL','RML','RLL','LUS','LLS','LLL'))) %>%
+  ggplot(aes (x=lobe, fill = factor(score))) +
+  geom_bar(position = 'stack', color='black', linewidth=0.2) + 
+  scale_fill_manual(values = score_colors_new) +
+  labs(
+    title = 'Distribution of Consolidation Ratings by Lobe',
+    x='Lobe',
+    y='Count',
+    fill='Rating'
+  ) +
+  theme_minimal()
+
+```
+
+### Bronchiectasis
+
+```{r}
+#by lobe
+bronch %>%
+  group_by(lobe, score) %>%
+  summarize(n=n()) %>%
+  mutate(prop = n / sum(n))
+
+bronch %>%
+  mutate(score = factor(score, levels = c(3,2,1,0)),
+         lobe = factor(lobe, levels = c('RUL','RML','RLL','LUS','LLS','LLL'))) %>%
+  ggplot(aes (x=lobe, fill = factor(score))) +
+  geom_bar(position = 'stack', color='black', linewidth=0.2) + 
+  scale_fill_manual(values = score_colors_new) +
+  labs(
+    title = 'Distribution of Bronchiectasis Ratings by Lobe',
+    x='Lobe',
+    y='Count',
+    fill='Rating'
+  ) +
+  theme_minimal()
+
+```
+
+### Atelectasis
+
+```{r}
+#by lobe
+atel %>%
+  group_by(lobe, score) %>%
+  summarize(n=n()) %>%
+  mutate(prop = n / sum(n))
+
+atel %>%
+  mutate(score = factor(score, levels = c(3,2,1,0)),
+         lobe = factor(lobe, levels = c('RUL','RML','RLL','LUS','LLS','LLL'))) %>%
+  ggplot(aes (x=lobe, fill = factor(score))) +
+  geom_bar(position = 'stack', color='black', linewidth=0.2) + 
+  scale_fill_manual(values = score_colors_new) +
+  labs(
+    title = 'Distribution of Atelectasis Ratings by Lobe',
+    x='Lobe',
+    y='Count',
+    fill='Rating'
+  ) +
+  theme_minimal()
+
+```
+
+### Thin Wall Cavity
+
+```{r}
+#by lobe
+thin %>%
+  group_by(lobe, score) %>%
+  summarize(n=n()) %>%
+  mutate(prop = n / sum(n))
+
+thin %>%
+  mutate(score = factor(score, levels = c(3,2,1,0)),
+         lobe = factor(lobe, levels = c('RUL','RML','RLL','LUS','LLS','LLL'))) %>%
+  ggplot(aes (x=lobe, fill = factor(score))) +
+  geom_bar(position = 'stack', color='black', linewidth=0.2) +
+  scale_fill_manual(values = score_colors_new) +
+  labs(
+    title = 'Distribution of Thin Wall Cavity Ratings by Lobe',
+    x='Lobe',
+    y='Count',
+    fill='Rating'
+  ) +
+  theme_minimal()
+
+```
+
+### Thick Wall Cavity
+
+```{r}
+#by lobe
+thick %>%
+  group_by(lobe, score) %>%
+  summarize(n=n()) %>%
+  mutate(prop = n / sum(n))
+
+thick %>%
+  mutate(score = factor(score, levels = c(3,2,1,0)),
+         lobe = factor(lobe, levels = c('RUL','RML','RLL','LUS','LLS','LLL'))) %>%
+  ggplot(aes (x=lobe, fill = factor(score))) +
+  geom_bar(position = 'stack', color='black', linewidth=0.2) +
+  scale_fill_manual(values = score_colors_new) +
+  labs(
+    title = 'Distribution of Thick Wall Cavity Ratings by Lobe',
+    x='Lobe',
+    y='Count',
+    fill='Rating'
+  ) +
+  theme_minimal()
+
+```
