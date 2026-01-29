@@ -1,0 +1,156 @@
+---
+title: "Table1"
+author: "Edward Bosko"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(MASS)
+library(car)
+
+```
+
+## Read in data
+
+```{r}
+wd2 <- "C:/Users/Eddie/OneDrive/Desktop/BIOSTAT/Thesis/Journal/DataProcessed/DataCountsMeasurements.xlsx"
+
+thin_wide <- read_excel(wd2, sheet = "thin.count")
+thin <- read_excel(wd2, sheet = "thin.count.long")
+thick <- read_excel(wd2, sheet = "thick.count.long")
+
+```
+
+## Table 1
+
+### Age
+
+### Check distribution and variance of residuals
+
+```{r}
+#grab just demo data
+demo <- thin_wide %>% 
+  slice(1:160) %>%
+  transmute(
+    age = age,
+    group = factor(overall,
+                   levels = c(1:4),
+                   labels = c("NBc", "NBs", "Fib", "Unc"))
+  )
+
+table(demo$group)
+
+```
+
+```{r}
+mymod <- lm(age ~ group, data=demo)
+
+```
+
+```{r}
+demo$resid <- resid(mymod)
+
+ggplot(demo, aes(sample=resid)) +
+  stat_qq() +
+  stat_qq_line()
+
+```
+
+```{r}
+leveneTest(age ~ group, data=demo, center = median)
+
+```
+
+### Perform ANOVA and Welch's ANOVA
+
+```{r}
+myanova <- aov(age~group, data=demo)
+summary(myanova)
+
+```
+
+```{r}
+oneway.test(age~group, data=demo)
+
+```
+
+### Find mean and sd for each group
+
+```{r}
+#nb with cavitation
+nbc <- demo %>% 
+  filter(group == "NBc")
+  
+mean(nbc$age)
+sd(nbc$age)
+
+#nb without cavitation
+nbs <- demo %>% 
+  filter(group == "NBs")
+  
+mean(nbs$age)
+sd(nbs$age)
+
+#fibrocavitary
+fib <- demo %>% 
+  filter(group == "Fib")
+  
+mean(fib$age)
+sd(fib$age)
+
+#unclassified
+unc <- demo %>% 
+  filter(group == "Unc")
+  
+mean(unc$age)
+sd(unc$age)
+
+demo2 <- demo %>%
+  group_by(group) %>%
+  summarise(
+    n = n(),
+    mean = round(mean(age),2),
+    sd = round(sd(age),2),
+    .groups = "drop"
+  )
+
+```
+
+### Sex
+
+```{r}
+#grab just demo data
+demosex <- thin_wide %>% 
+  slice(1:160) %>%
+  transmute(
+    sex = sex,
+    group = factor(overall,
+                   levels = c(1:4),
+                   labels = c("NBc", "NBs", "Fib", "Unc"))
+  )
+
+tab <- table(demosex$group, demosex$sex)
+
+```
+
+```{r}
+chisq.test(tab)$expected
+
+#these do not meet the assumptions for a valid chisq test
+
+```
+
+```{r}
+fisher.test(tab)
+table(demosex)
+```
